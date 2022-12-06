@@ -34,7 +34,7 @@
 	                            ex) 'https://hyperauth.tmaxcloud.org/auth/realms/tmax/.well-known/openid-configuration' # hyperauth의 경우 사용 예시
 	```
 
-3. 추가 gitea/values.yaml 설정
+3. 추가 values.yaml 설정
 	```
 	gitea:
 	  config:
