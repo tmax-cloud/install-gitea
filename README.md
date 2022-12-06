@@ -35,15 +35,15 @@
 	```
 
 3. 추가 gitea/values.yaml 설정
-```
-gitea:
-  config:
-    server:
-      PROTOCOL: http
-      DOMAIN: gitea.testdomain.com # 도메인 설정
-      ROOT_URL: http://gitea.testdomain.com # root url 설정
-      SSH_DOMAIN: gitea.testdomain.com # ssh 도메인 설정
-```
+	```
+	gitea:
+	  config:
+	    server:
+	      PROTOCOL: http
+	      DOMAIN: gitea.testdomain.com # 도메인 설정
+	      ROOT_URL: http://gitea.testdomain.com # root url 설정
+	      SSH_DOMAIN: gitea.testdomain.com # ssh 도메인 설정
+	```
 
 4. Chart 설치
 	```bash
