@@ -3,14 +3,16 @@
 ## 개요
 - Gitea
 	- Gitea is a painless self-hosted Git service.
-## 구성 요소 및 버전
+## Prerequisites
+- Kubernetes, Helm3
 
-## 폐쇄망 구축 가이드
-1. 폐쇄망에서 설치하는 경우 사용하는 image repository에 필요한 이미지를 push한다
+## 설치 가이드
+1. Gitea Chart Museum 추가
+	```bash
+	helm repo add gitea-charts https://dl.gitea.io/charts/
+	```
 
-2. 폐쇠망 환경으로 전송
-
-3. Keycloak 연동 시
+2. Keycloak 연동 시
 	1. Keycloak에서 클라이언트 생성
 	- Name: gitea
 	- Client-Protocol: openid-connect
@@ -20,7 +22,7 @@
 	2. 클라이언트 시크릿 복사
 	- Client > gitea> Credentials > Secret
 
-	3. gitea/values.yaml 설정
+	3. values.yaml 설정
 	```
 	gitea:
 	  oauth:
@@ -32,7 +34,7 @@
 	                            ex) 'https://hyperauth.tmaxcloud.org/auth/realms/tmax/.well-known/openid-configuration' # hyperauth의 경우 사용 예시
 	```
 
-4. 추가 gitea/values.yaml 설정
+3. 추가 gitea/values.yaml 설정
 ```
 gitea:
   config:
@@ -42,3 +44,8 @@ gitea:
       ROOT_URL: http://gitea.testdomain.com # root url 설정
       SSH_DOMAIN: gitea.testdomain.com # ssh 도메인 설정
 ```
+
+4. Chart 설치
+	```bash
+	install gitea -f values.yaml gitea-charts/gitea -n gitea-system
+	```
