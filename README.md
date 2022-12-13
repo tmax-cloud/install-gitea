@@ -47,5 +47,54 @@
 
 4. Chart 설치
 	```bash
+	kubectl create namespace gitea-system
 	install gitea -f values.yaml gitea-charts/gitea -n gitea-system
 	```
+
+## 폐쇄망 설치 가이드
+1. 폐쇄망에서 설치하는 경우 사용하는 image를 다운받고 저장합니다.
+   - 작업 디렉토리 생성 및 환경 설정
+
+   ```bash
+   mkdir -p ~/gitea-install
+   export GITEA_HOME=~/gitea-install
+   cd $GITEA_HOME
+   ```
+
+   - 외부 네트워크 통신이 가능한 환경에서 필요한 이미지를 다운받습니다.
+
+   ```bash
+   # gitea 이미지 Pull
+   docker image pull gitea/gitea:1.16.8
+   docker image pull docker.io/bitnami/memcached:1.6.9-debian-10-r114
+   docker image pull docker.io/bitnami/postgresql:11.11.0-debian-10-r62
+   
+   # gitea 이미지 Save
+   docker save gitea/gitea:1.16.8 > gitea.tar
+   docker save docker.io/bitnami/memcached:1.6.9-debian-10-r114 > gitea-memcached.tar
+   docker save docker.io/bitnami/postgresql:11.11.0-debian-10-r62 > gitea-postgresql.tar
+   ```
+   
+2. 폐쇄망으로 파일(.tar)을 옮깁니다.
+
+3. 폐쇄망에서 .tar 압축을 풀고 설치합니다.
+
+   ```bash
+   # 이미지 레지스트리 주소
+   REGISTRY=[IP:PORT]
+
+   # 이미지 Load
+   docker load < gitea.tar
+   docker load < gitea-memcached.tar
+   docker load < gitea-postgresql.tar
+   
+   # 이미지 Tag
+   docker tag gitea/gitea:1.16.8 ${REGISTRY}/gitea/gitea:1.16.8
+   docker tag docker.io/bitnami/memcached:1.6.9-debian-10-r114 ${REGISTRY}/docker.io/bitnami/memcached:1.6.9-debian-10-r114
+   docker tag docker.io/bitnami/postgresql:11.11.0-debian-10-r62 ${REGISTRY}/docker.io/bitnami/postgresql:11.11.0-debian-10-r62
+
+   # 이미지 Push
+   docker push ${REGISTRY}/gitea/gitea:1.16.8
+   docker push ${REGISTRY}/docker.io/bitnami/memcached:1.6.9-debian-10-r114
+   docker push ${REGISTRY}/docker.io/bitnami/postgresql:11.11.0-debian-10-r62
+   ```
