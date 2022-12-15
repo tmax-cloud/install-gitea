@@ -67,12 +67,18 @@
    # gitea 이미지 Pull
    docker image pull gitea/gitea:1.16.8
    docker image pull docker.io/bitnami/memcached:1.6.9-debian-10-r114
+   docker image pull docker.io/bitnami/memcached-exporter:0.8.0-debian-10-r105
    docker image pull docker.io/bitnami/postgresql:11.11.0-debian-10-r62
+   docker image pull docker.io/bitnami/bitnami-shell:10
+   docker image pull docker.io/bitnami/postgres-exporter:0.9.0-debian-10-r34
    
    # gitea 이미지 Save
    docker save gitea/gitea:1.16.8 > gitea.tar
    docker save docker.io/bitnami/memcached:1.6.9-debian-10-r114 > gitea-memcached.tar
+   docker save docker.io/bitnami/memcached-exporter:0.8.0-debian-10-r105 > gitea-memcached-exporter.tar
    docker save docker.io/bitnami/postgresql:11.11.0-debian-10-r62 > gitea-postgresql.tar
+   docker save docker.io/bitnami/bitnami-shell:10 > gitea-bitnami-shell.tar
+   docker save docker.io/bitnami/postgres-exporter:0.9.0-debian-10-r34 > gitea-postgres-exporter.tar
    ```
    
 2. 폐쇄망으로 파일(.tar)을 옮깁니다.
@@ -86,15 +92,24 @@
    # 이미지 Load
    docker load < gitea.tar
    docker load < gitea-memcached.tar
+   docker load < gitea-memcached-exporter.tar
    docker load < gitea-postgresql.tar
+   docker load < gitea-bitnami-shell.tar
+   docker load < gitea-postgres-exporter.tar
    
    # 이미지 Tag
    docker tag gitea/gitea:1.16.8 ${REGISTRY}/gitea/gitea:1.16.8
    docker tag docker.io/bitnami/memcached:1.6.9-debian-10-r114 ${REGISTRY}/docker.io/bitnami/memcached:1.6.9-debian-10-r114
+   docker tag docker.io/bitnami/memcached-exporter:0.8.0-debian-10-r105 ${REGISTRY}/docker.io/bitnami/memcached-exporter:0.8.0-debian-10-r105
    docker tag docker.io/bitnami/postgresql:11.11.0-debian-10-r62 ${REGISTRY}/docker.io/bitnami/postgresql:11.11.0-debian-10-r62
+   docker tag docker.io/bitnami/bitnami-shell:10 ${REGISTRY}/docker.io/bitnami/bitnami-shell:10
+   docker tag docker.io/bitnami/postgres-exporter:0.9.0-debian-10-r34 ${REGISTRY}/docker.io/bitnami/postgres-exporter:0.9.0-debian-10-r34
 
    # 이미지 Push
    docker push ${REGISTRY}/gitea/gitea:1.16.8
    docker push ${REGISTRY}/docker.io/bitnami/memcached:1.6.9-debian-10-r114
+   docker push ${REGISTRY}/docker.io/bitnami/memcached-exporter:0.8.0-debian-10-r105
    docker push ${REGISTRY}/docker.io/bitnami/postgresql:11.11.0-debian-10-r62
+   docker push ${REGISTRY}/docker.io/bitnami/bitnami-shell:10
+   docker push ${REGISTRY}/docker.io/bitnami/postgres-exporter:0.9.0-debian-10-r34
    ```
