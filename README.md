@@ -113,3 +113,17 @@
    docker push ${REGISTRY}/docker.io/bitnami/bitnami-shell:10
    docker push ${REGISTRY}/docker.io/bitnami/postgres-exporter:0.9.0-debian-10-r34
    ```
+
+4. values.yaml의 global.registry 수정
+   gitea, memcached, postgresql 세 개의 values.yaml 을 수정한다.
+   
+   install-gitea/values.yaml
+   install-gitea/charts/memcached/values.yaml
+   install-gitea/charts/postgresql/values.yaml
+   
+   ```bash
+   global:
+     registry:
+       is_offline: true # true로 수정
+       private_registry: test-registry.com # private_registry 주소 입력
+   ```
