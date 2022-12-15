@@ -3,6 +3,9 @@
 ## Current available global Docker image parameters: imageRegistry and imagePullSecrets
 ##
 global:
+  registry:
+    is_offline: false
+    private_registry: test-registry.com
   postgresql: {}
 #   imageRegistry: myRegistryName
 #   imagePullSecrets:
