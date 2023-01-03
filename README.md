@@ -9,7 +9,7 @@
 ## 설치 가이드
 1. Gitea Chart Museum 추가
 	```bash
-	helm repo add gitea-charts https://dl.gitea.io/charts/
+	helm repo add gitea-charts-tmax https://tmax-cloud.github.io/gitea-chart/stable
 	```
 
 2. Keycloak 연동 시
@@ -48,7 +48,7 @@
 4. Chart 설치
 	```bash
 	kubectl create namespace gitea-system
-	install gitea -f values.yaml gitea-charts/gitea -n gitea-system
+	install gitea -f values.yaml gitea-charts-tmax/gitea -n gitea-system
 	```
 
 ## 폐쇄망 설치 가이드
