@@ -48,7 +48,7 @@
 4. Chart 설치
 	```bash
 	kubectl create namespace gitea-system
-	install gitea -f values.yaml gitea-charts-tmax/gitea -n gitea-system
+	helm install gitea -f values.yaml gitea-charts-tmax/gitea -n gitea-system
 	```
 
 ## 폐쇄망 설치 가이드
