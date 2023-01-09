@@ -23,7 +23,7 @@
 	- Client > gitea> Credentials > Secret
 
 	3. values.yaml 설정
-	```
+	```yaml
 	gitea:
 	  oauth:
 	    - name: 'giteaOAuth' # oauth 이름
@@ -35,7 +35,7 @@
 	```
 
 3. 추가 values.yaml 설정
-	```
+	```yaml
 	gitea:
 	  config:
 	    server:
@@ -44,12 +44,61 @@
 	      ROOT_URL: http://gitea.testdomain.com # root url 설정
 	      SSH_DOMAIN: gitea.testdomain.com # ssh 도메인 설정
 	```
+	
+	```yaml
+	ingress:
+	  hosts:
+	    domain: testdomain.com # 도메인 설정
+	    subdomain: gitea # 서브도메인 설정
+	```
 
 4. Chart 설치
 	```bash
 	kubectl create namespace gitea-system
 	helm install gitea -f values.yaml gitea-charts-tmax/gitea -n gitea-system
 	```
+
+## 삭제 가이드
+1. Chart 삭제
+```bash
+$ helm uninstall gitea -n gitea-system
+$ k delete ns gitea-system
+```
+
+## Hyperauth selfsigned CA 설정
+1. TLS 시크릿 생성
+```bash
+$ KEYCLOAK_CERT_FILE=/etc/kubernetes/pki/hypercloud-root-ca.crt 
+$ KEYCLOAK_TLS_SECRET_NAME=<시크릿 이름>
+
+$ kubectl create ns gitea-system
+
+$ cat <<EOT | kubectl apply -n gitea-system -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: $KEYCLOAK_TLS_SECRET_NAME
+type: kubernetes.io/tls
+data:
+  tls.crt: $(cat $KEYCLOAK_CERT_FILE | base64 -w 0)
+  tls.key: $(echo -n 'dummyKey' | base64 -w 0)
+EOT
+```
+
+2. 추가 values.yaml 설정 
+```yaml
+extraVolumes:
+  - name: selfsigned-ca     
+    secret:
+      secretName: <시크릿 >
+```
+
+```yaml
+extraVolumeMounts:
+  - name: selfsigned-ca   
+    readOnly: true
+    mountPath: /etc/ssl/certs 
+```
 
 ## 폐쇄망 설치 가이드
 1. 폐쇄망에서 설치하는 경우 사용하는 image를 다운받고 저장합니다.
