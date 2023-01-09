@@ -9,7 +9,7 @@
 ## 설치 가이드
 1. Gitea Chart Museum 추가
 	```bash
-	helm repo add gitea-charts-tmax https://tmax-cloud.github.io/charts/
+	helm repo add tmax-cloud https://tmax-cloud.github.io/charts/
 	```
 
 2. Keycloak 연동 시
