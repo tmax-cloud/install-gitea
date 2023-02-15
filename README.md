@@ -160,7 +160,7 @@ EOT
 extraVolumes:
   - name: selfsigned-ca     
     secret:
-      secretName: <시크릿 >
+      secretName: <시크릿 이름>
 ```
 
 ```yaml
