@@ -66,11 +66,7 @@ spec:
               exec:
                 command: ["/bin/sh", "-c", "/usr/bin/pkill -10 memcached ; sleep 60s"]
           {{- end }}
-          {{- if .Values.global.registry.is_offline }}
-          image: "{{ .Values.global.registry.private_registry }}/{{ template "memcached.image" . }}"
-          {{- else }}
           image: {{ template "memcached.image" . }}
-          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           {{- if .Values.command }}
           command: {{- include "common.tplvalues.render" (dict "value" .Values.command "context" $) | nindent 12 }}
@@ -129,11 +125,7 @@ spec:
               mountPath: /tmp
         {{- if .Values.metrics.enabled }}
         - name: metrics
-          {{- if .Values.global.registry.is_offline }}
-          image: "{{ .Values.global.registry.private_registry }}/{{ template "memcached.metrics.image" . }}"
-          {{- else }}
           image: {{ template "memcached.metrics.image" . }}
-          {{- end }}
           imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
           ports:
             - name: {{ .Values.metrics.portName }}

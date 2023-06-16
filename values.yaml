@@ -25,9 +25,9 @@ clusterDomain: cluster.local
 ## @param image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher
 image:
   registry: ""
-  repository: gitea/gitea
+  repository: docker.io/gitea/gitea
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.18.0"
+  tag: 1.18.0
   pullPolicy: Always
   rootless: false # only possible when running 1.14 or later
 
@@ -213,9 +213,9 @@ persistence:
 
 ## @param extraVolumes Additional volumes to mount to the Gitea statefulset
 extraVolumes: []
-#  - name: selfsigned-ca     
-#    secret:
-#      secretName: <시크릿 이름>
+# - name: selfsigned-ca
+#   secret:
+#     secretName: <시크릿 이름>
 
 ## @param extraContainerVolumeMounts Mounts that are only mapped into the Gitea runtime/main container, to e.g. override custom templates.
 extraContainerVolumeMounts: []
@@ -229,9 +229,9 @@ extraInitVolumeMounts: []
 ## As an example, can be used to mount a client cert when connecting to an external Postgres server.
 ## @param extraVolumeMounts **DEPRECATED** Additional volume mounts for init containers and the Gitea main container
 extraVolumeMounts: []
-#  - name: selfsigned-ca   
-#    readOnly: true
-#    mountPath: /etc/ssl/certs 
+# - name: selfsigned-ca
+#   readOnly: true
+#   mountPath: /etc/ssl/certs
 
 ## @section Init
 ## @param initPreScript Bash shell script copied verbatim to the start of the init-container.
@@ -294,11 +294,11 @@ gitea:
   # Either specify inline `key` and `secret` or refer to them via `existingSecret`
   ## @param gitea.oauth OAuth configuration
   oauth:
-    - name: 'giteaOAuth'
-      provider: 'openidConnect'
-      key: 'gitea'
-      secret: 'b9909ff9-cee8-4394-b287-1f596a8791cd'
-      autoDiscoverUrl: 'https://hyperauth.tmaxcloud.org/auth/realms/tmax/.well-known/openid-configuration'
+    - name: 'giteaOAuth' # oauth name
+      provider: 'openidConnect' # client protocol
+      key: 'gitea' # client name
+      secret: 'tmax_client_secret'
+      autoDiscoverUrl: 'https://hyperauth.testdomain.com/auth/realms/tmax/.well-known/openid-configuration'
     # - name: 'OAuth 1'
     #   provider:
     #   key:
@@ -320,6 +320,7 @@ gitea:
       SSH_DOMAIN: gitea.testdomain.com
     webhook:
       ALLOWED_HOST_LIST: '*'
+      SKIP_TLS_VERIFY: true
     log:
       LEVEL: Info # "Trace", "Debug", "Info", "Warn", "Error", "Critical" or "None"
   #  APP_NAME: "Gitea: Git with a cup of tea"
@@ -409,6 +410,10 @@ gitea:
 ## @param memcached.enabled Memcached is loaded as a dependency from [Bitnami](https://github.com/bitnami/charts/tree/master/bitnami/memcached) if enabled in the values. Complete Configuration can be taken from their website.
 ## @param memcached.service.port Port for Memcached
 memcached:
+  global:
+    registry:
+      is_offline: false
+      private_registry: test-registry.com
   enabled: true
   service:
     port: 11211
@@ -464,6 +469,10 @@ mysql:
 ## @param mariadb.primary.service.port Port to connect to MariaDB service
 ## @param mariadb.primary.persistence.size Persistence size for MariaDB
 mariadb:
+  global:
+    registry:
+      is_offline: false
+      private_registry: test-registry.com
   enabled: true
   auth:
     database: gitea

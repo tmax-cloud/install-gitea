@@ -72,11 +72,7 @@ spec:
       initContainers:
       {{- if and .Values.volumePermissions.enabled (or .Values.persistence.enabled (and .Values.shmVolume.enabled .Values.shmVolume.chmod.enabled) .Values.tls.enabled) }}
         - name: init-chmod-data
-          {{- if .Values.global.registry.is_offline }}
-          image: "{{ .Values.global.registry.private_registry }}/{{ template "postgresql.volumePermissions.image" . }}"
-          {{- else }}
           image: {{ template "postgresql.volumePermissions.image" . }}
-          {{- end }}
           imagePullPolicy: {{ .Values.volumePermissions.image.pullPolicy | quote }}
           {{- if .Values.resources }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
@@ -143,11 +139,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ template "common.names.fullname" . }}
-          {{- if .Values.global.registry.is_offline }}
-          image: "{{ .Values.global.registry.private_registry }}/{{ template "postgresql.image" . }}"
-          {{- else }}
           image: {{ template "postgresql.image" . }}
-          {{- end }}
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           {{- if .Values.resources }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
@@ -461,11 +453,7 @@ spec:
 {{- end }}
 {{- if .Values.metrics.enabled }}
         - name: metrics
-          {{- if .Values.global.registry.is_offline }}
-          image: "{{ .Values.global.registry.private_registry }}/{{ template "postgresql.metrics.image" . }}"
-          {{- else }}
           image: {{ template "postgresql.metrics.image" . }}
-          {{- end }}
           imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
          {{- if .Values.metrics.securityContext.enabled }}
           securityContext: {{- omit .Values.metrics.securityContext "enabled" | toYaml | nindent 12 }}
