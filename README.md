@@ -177,4 +177,63 @@ $ helm uninstall gitea -n gitea-system
 $ k delete ns gitea-system
 ```
 
+## 백업 및 복구 가이드
+### 백업
+- gitea 컨테이너 접속
+```bash
+$ kubectl exec -it -n gitea-system gitea-0 --container gitea -- /bin/bash
+```
 
+- 백업 파일 생성(ex. /tmp/gitea-dump-1686808859.zip)
+```bash
+$ chmod -R 755 /data/ssh
+$ su git
+$ cd tmp
+$ /usr/local/bin/gitea dump
+$ exit
+```
+
+- 백업 파일 로컬로 복사
+```bash
+$ kubectl cp -n gitea-system gitea-0:/tmp/gitea-dump-1686808859.zip --container gitea gitea-dump-1686808859.zip
+```
+
+### 복구
+1. Gitea 복구
+- 백업 파일 압축 해제 및 컨테이너로 복사
+```bash
+$ unzip gitea-dump-1686808859.zip -d ./gitea-dump-1686808859
+$ kubectl cp -n gitea-system gitea-dump-1686808859/ gitea-0:/tmp/gitea-dump-1686808859/ --container gitea
+```
+
+- Gitea 데이터 복구
+```bash
+$ kubectl exec -it -n gitea-system gitea-0 --container gitea -- /bin/bash
+$ cp -R /tmp/gitea-dump-1686808859/data/. /data/gitea
+$ cp -R /tmp/gitea-dump-1686808859/repos/. /data/git/gitea-repositories/
+$ chown -R git:git /data
+```
+
+- Regenerate Git Hooks
+```bash
+$ su git
+$ /usr/local/bin/gitea -c '/data/gitea/conf/app.ini' admin regenerate hooks
+```
+
+2. mariadb 복구
+- 백업 파일 컨테이너로 복사
+```bash
+$ kubectl cp -n gitea-system gitea-dump-1686808859/ gitea-mariadb-0:/tmp/gitea-dump-1686808859/
+```
+
+- DB 복구
+```bash
+$ kubectl exec -it -n gitea-system gitea-mariadb-0 -- /bin/bash
+$ cat /tmp/gitea-dump-1686808859/gitea-db.sql | sed -e 's/^INSERT INTO/REPLACE INTO/' -e 's/^CREATE INDEX/CREATE INDEX IF NOT EXISTS/' -e 's/^CREATE UNIQUE INDEX/CREATE UNIQUE INDEX IF NOT EXISTS/' | mysql --default-character-set=utf8mb4 -u gitea -p gitea
+Enter password: "gitea"
+```
+
+3. Gitea 파드 재실행
+```bash
+$ kubectl delete pod -n gitea-system gitea-0
+```
