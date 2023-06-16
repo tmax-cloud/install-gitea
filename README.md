@@ -190,10 +190,9 @@ $ chmod -R 755 /data/ssh
 $ su git
 $ cd tmp
 $ /usr/local/bin/gitea dump
-$ exit
 ```
 
-- 백업 파일 로컬로 복사
+- 백업 파일 로컬로 복사 (gitea 컨테이너 빠져나온 후)
 ```bash
 $ kubectl cp -n gitea-system gitea-0:/tmp/gitea-dump-1686808859.zip --container gitea gitea-dump-1686808859.zip
 ```
