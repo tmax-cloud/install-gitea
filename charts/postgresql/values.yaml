@@ -3,9 +3,6 @@
 ## Current available global Docker image parameters: imageRegistry and imagePullSecrets
 ##
 global:
-  registry:
-    is_offline: false
-    private_registry: test-registry.com
   postgresql: {}
 #   imageRegistry: myRegistryName
 #   imagePullSecrets:
@@ -626,6 +623,9 @@ readReplicas:
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
 resources:
+  limits:
+    memory: 256Mi
+    cpu: 250m
   requests:
     memory: 256Mi
     cpu: 250m
