@@ -102,6 +102,7 @@
 	3. values.yaml 설정
 	```yaml
 	gitea:
+ 	  oauth_enabled: true # oauth 등록 안할 경우 false (기본값 : false)
 	  oauth:
 	    - name: 'giteaOAuth' # oauth 이름
 	      provider: 'openidConnect' # 클라이언트 프로토콜
@@ -138,7 +139,7 @@
 ## Hyperauth selfsigned CA 설정
 1. TLS 시크릿 생성
 ```bash
-$ KEYCLOAK_CERT_FILE=/etc/kubernetes/pki/hypercloud-root-ca.crt 
+$ KEYCLOAK_CERT_FILE=<인증서 파일 경로> (ex. /etc/kubernetes/pki/hypercloud-root-ca.crt) 
 $ KEYCLOAK_TLS_SECRET_NAME=<시크릿 이름>
 
 $ kubectl create ns gitea-system
